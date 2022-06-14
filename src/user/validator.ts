@@ -9,6 +9,10 @@ const validateUserData = {
     check('lastName')
       .notEmpty()
       .withMessage('last name must not be empty'),
+    check('type')
+      .notEmpty()
+      .isIn(["buyer", "seller", "logistics"])
+      .withMessage('user type must not be empty'),
     check('profilePhoto')
       .notEmpty()
       .withMessage('profilePhoto must not be empty'),

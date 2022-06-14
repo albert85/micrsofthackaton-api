@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import user from './user/doc';
 
 dotenv.config();
 
@@ -9,7 +10,7 @@ const doc = {
     title: "Microsoft hackaton",
     description: "An Application for Microsoft Hackaton",
   },
-  host: process.env.BACKEND_URL || "localhost:5020",
+  host: process.env.BACKEND_URL || "localhost:5050",
   basePath: "/api",
   tags: [
     {
@@ -21,6 +22,7 @@ const doc = {
   consumes: ["application/json"],
   produces: ["application/json"],
   paths: {
+    ...user
   },
   securityDefinitions: {
     Bearer: {

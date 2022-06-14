@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import {ObjectId} from 'mongodb';
 import { generateToken, handleResponse } from '../utils/util';
 import { Request, Response} from 'express';
 import UserModel from './models/users';
@@ -10,11 +11,13 @@ class UserService {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      phone: req.body.phone,
+      type: req.body.type || 'buyer',
       password: await bcrypt.hash(req.body.password, 10),
     };
 
     const userDetailDb = await UserModel.findOne({
-      email: req.body.email,
+      email: req.body.phone,
     });
 
     if (userDetailDb) {
@@ -86,6 +89,26 @@ class UserService {
       },
       token,
     );
+  }
+
+  static async getUser(req: any, res: Response) {
+    try {
+
+      const userDetail = await UserModel.findOne({
+        // @ts-ignore
+        _id: ObjectId(req.user.userId),
+      });
+      
+      return handleResponse(res, 200, true, 'User Data successfully retrieved',  {
+        firstName: userDetail.firstName,
+        lastName: userDetail.lastName,
+        email: userDetail.email,
+        userId: userDetail._id,
+        phone: userDetail.phone
+      });
+    } catch (error) {
+      
+    }
   }
 
 }
