@@ -26,9 +26,32 @@ class ProductService {
 
   static async getAllUserOrder(req:any, res: Response){
     try {
-      const data = await OrderModel.find({
-        buyerId: req.user.userId
-      });
+      const data = await OrderModel.aggregate([
+       {
+        $match: {  $expr: { $eq: ['$buyerId', { $toObjectId: req.user.userId }]}},
+       },
+       {
+        $lookup: {
+         from: 'products',
+         localField: 'productId',
+         foreignField: '_id',
+         as: 'orderProduct',
+         pipeline: [
+          {
+            $project: {
+              __v: 0
+            }
+          }
+        ]
+        }
+       },
+       {$unwind: '$orderProduct'},
+       {
+        $project: {
+          __v: 0
+        }
+      }
+      ]);
       return handleResponse(res, 200, true, 'Orders was successfully retrived', data)
       
     } catch (error) {
@@ -36,12 +59,37 @@ class ProductService {
     }
   }
 
-  static async getOneOrder(req: Request, res: Response){
+  static async getOneOrder(req: any, res: Response){
     try {
-      const data = await OrderModel.findOne({
-        // @ts-ignore
-        _id: ObjectId(req.params.orderId)
-      });
+
+      const [data] = await OrderModel.aggregate([
+        {
+         $match: {  $expr: { $eq: ['$_id', { $toObjectId: req.params.orderId }]}},
+        },
+        {
+         $lookup: {
+          from: 'products',
+          localField: 'productId',
+          foreignField: '_id',
+          as: 'orderProduct',
+          pipeline: [
+            {
+              $project: {
+                __v: 0
+              }
+            }
+          ]
+         }
+        },
+        {$unwind: '$orderProduct'},
+        {
+          $project: {
+            __v: 0
+          }
+        }
+       ]);
+
+
       return handleResponse(res, 200, true, 'Order was successfully retrived', data)
       
     } catch (error) {

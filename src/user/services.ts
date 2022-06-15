@@ -12,6 +12,7 @@ class UserService {
       lastName: req.body.lastName,
       email: req.body.email,
       phone: req.body.phone,
+      profilePhoto: req.body.profilePhoto,
       type: req.body.type || 'buyer',
       password: await bcrypt.hash(req.body.password, 10),
     };

@@ -27,7 +27,32 @@ class ProductService {
 
   static async getAllProduct(req:any, res: Response){
     try {
-      const data = await ProductModel.find();
+      // const data = await ProductModel.find();
+
+      const data = await ProductModel.aggregate([
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'sellerId',
+            foreignField: '_id',
+            as: 'user',
+            pipeline: [
+              {
+                $project: {
+                  __v: 0,
+                  password: 0
+                }
+              }
+            ]
+          }
+        },
+        { $unwind: '$user'},
+        {
+          $project: {
+            __v: 0,
+          }
+        }
+      ])
       return handleResponse(res, 200, true, 'All Products was successfully retrived', data)
       
     } catch (error) {
@@ -37,10 +62,38 @@ class ProductService {
 
   static async getOneProduct(req: Request, res: Response){
     try {
-      const data = await ProductModel.findOne({
-        // @ts-ignore
-        _id: ObjectId(req.params.productId)
-      });
+      // const data = await ProductModel.findOne({
+      //   // @ts-ignore
+      //   _id: ObjectId(req.params.productId)
+      // });
+
+      const [data] = await ProductModel.aggregate([
+        {
+          $match: { $expr: { $eq: ["$_id", { $toObjectId: req.params.productId }]} }
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'sellerId',
+            foreignField: '_id',
+            as: 'user',
+            pipeline: [
+              {
+                $project: {
+                  __v: 0,
+                  password: 0
+                }
+              }
+            ]
+          }
+        },
+        { $unwind: '$user'},
+        {
+          $project: {
+            __v: 0,
+          }
+        }
+      ])
       return handleResponse(res, 200, true, 'Product was successfully retrived', data)
       
     } catch (error) {
