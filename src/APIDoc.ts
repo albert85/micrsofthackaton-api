@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import user from './user/doc';
+import order from './orders/doc';
+import product from './products/doc';
 
 dotenv.config();
 
@@ -22,7 +24,9 @@ const doc = {
   consumes: ["application/json"],
   produces: ["application/json"],
   paths: {
-    ...user
+    ...user,
+    ...order,
+    ...product
   },
   securityDefinitions: {
     Bearer: {

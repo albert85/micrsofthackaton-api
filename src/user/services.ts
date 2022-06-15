@@ -107,7 +107,7 @@ class UserService {
         phone: userDetail.phone
       });
     } catch (error) {
-      
+      return handleResponse(res, 500, false, 'Something went wrong on retrieving user', error);
     }
   }
 

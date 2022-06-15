@@ -23,7 +23,7 @@ const productSchema = new Schema({
   title: {
     type: String,
   },
-  quantity: {
+  quantityAvailable: {
     type: Number,
   },
   createdAt: {
