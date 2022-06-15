@@ -36,11 +36,11 @@ class ProductService {
     }
   }
 
-  static async getOneProduct(req: Request, res: Response){
+  static async getOneOrder(req: Request, res: Response){
     try {
       const data = await OrderModel.findOne({
         // @ts-ignore
-        _id: ObjectId(req.params.productId)
+        _id: ObjectId(req.params.orderId)
       });
       return handleResponse(res, 200, true, 'Order was successfully retrived', data)
       

@@ -109,8 +109,8 @@ const product = {
   '/v1/product/{productId}': {
     get: {
       tags: ['Product'],
-      summary: 'Get user info',
-      description: 'Get user info',
+      summary: 'Get A product Details',
+      description: 'Get A product Details',
       parameters: [
         {
           in: 'path',
@@ -121,7 +121,7 @@ const product = {
       ],
       responses: {
         200: {
-          description: 'User was successfully retrieved',
+          description: 'Product Details was successfully retrieved',
           schema: {
             type: 'object',
             properties: {

@@ -1,10 +1,16 @@
 const order = {
-  '/v1/order': {
+  '/v1/order/{productId}': {
     post: {
       tags: ['Order'],
       summary: 'To create a order',
       description: 'To create a order',
       parameters: [
+        {
+          in: 'path',
+          name: 'productId',
+          type: 'string',
+          description: 'Supply product Id'
+        },
         {
           in: 'body',
           name: 'body',
@@ -53,6 +59,8 @@ const order = {
           },
         ]
     },
+  },
+  '/v1/order': {
     get: {
       tags: ['Order'],
       summary: 'Get All Orders',
